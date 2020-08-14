@@ -33,7 +33,7 @@ void HttpClient::resetState()
 {
   iState = eIdle;
   iStatusCode = 0;
-  iContentLength = kNoContentLengthHeader;
+  iContentLength = NO_CONTENT_LENGTH_HEADER;
   iBodyLengthConsumed = 0;
   iContentLengthPtr = kContentLengthPrefix;
   iTransferEncodingChunkedPtr = kTransferEncodingChunked;
@@ -542,7 +542,7 @@ bool HttpClient::endOfHeadersReached()
     return (iState == eReadingBody || iState == eReadingChunkLength || iState == eReadingBodyChunk);
 };
 
-int HttpClient::contentLength()
+long HttpClient::contentLength()
 {
     // skip the response headers, if they haven't been read already 
     if (!endOfHeadersReached())
@@ -555,7 +555,7 @@ int HttpClient::contentLength()
 
 String HttpClient::responseBody()
 {
-    int bodyLength = contentLength();
+    long bodyLength = contentLength();
     String response;
 
     if (bodyLength > 0)
@@ -596,7 +596,7 @@ String HttpClient::responseBody()
 
 bool HttpClient::endOfBodyReached()
 {
-    if (endOfHeadersReached() && (contentLength() != kNoContentLengthHeader))
+    if (endOfHeadersReached() && (contentLength() != NO_CONTENT_LENGTH_HEADER))
     {
         // We've got to the body and we know how long it will be
         return (iBodyLengthConsumed >= contentLength());

@@ -38,10 +38,11 @@ static const int HTTP_ERROR_INVALID_RESPONSE =-4;
 #define HTTP_HEADER_USER_AGENT     "User-Agent"
 #define HTTP_HEADER_VALUE_CHUNKED  "chunked"
 
+#define NO_CONTENT_LENGTH_HEADER -1
+
 class HttpClient : public Client
 {
 public:
-    static const int kNoContentLengthHeader =-1;
     static const int kHttpPort =80;
     static const char* kUserAgent;
 
@@ -272,7 +273,7 @@ public:
       @return Length of the body, in bytes, or kNoContentLengthHeader if no
       Content-Length header was returned by the server
     */
-    int contentLength();
+    long contentLength();
 
     /** Returns if the response body is chunked
       @return true if response body is chunked, false otherwise
@@ -372,9 +373,9 @@ protected:
     // Stores the status code for the response, once known
     int iStatusCode;
     // Stores the value of the Content-Length header, if present
-    int iContentLength;
+    long iContentLength;
     // How many bytes of the response body have been read by the user
-    int iBodyLengthConsumed;
+    long iBodyLengthConsumed;
     // How far through a Content-Length header prefix we are
     const char* iContentLengthPtr;
     // How far through a Transfer-Encoding chunked header we are
